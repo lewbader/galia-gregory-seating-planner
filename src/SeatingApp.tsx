@@ -53,6 +53,7 @@ const initialTables: Table[] = [
 ];
 
 const storageKey = "galia-gregory-seating-v1";
+const seatingCardPreviewUrl = "/galia-gregory-seating-card.png";
 
 function makeId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -693,6 +694,11 @@ export function SeatingApp() {
             const href = phone ? `sms:${phone}?&body=${encodeURIComponent(body)}` : "";
             return (
               <article key={guest.id} className="message-card">
+                <img
+                  className="message-card-image"
+                  src={seatingCardPreviewUrl}
+                  alt={`Seating card preview for ${guest.name}`}
+                />
                 <div>
                   <strong>{guest.name}</strong>
                   <small>{guest.phone || "No phone number"}</small>

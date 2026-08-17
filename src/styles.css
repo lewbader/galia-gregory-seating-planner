@@ -400,6 +400,15 @@ label {
   padding: 14px;
 }
 
+.message-card-image {
+  aspect-ratio: 4 / 5;
+  background: #f7f0e4;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  object-fit: cover;
+  width: 100%;
+}
+
 .message-card div {
   display: grid;
   gap: 4px;
