@@ -692,14 +692,18 @@ export function SeatingApp() {
             const phone = cleanPhone(guest.phone);
             const body = messageFor(guest);
             const href = phone ? `sms:${phone}?&body=${encodeURIComponent(body)}` : "";
+            const tableNumber = tableById[guest.tableId]?.name.replace(/^Table\s*/i, "") ?? "";
             return (
               <article key={guest.id} className="message-card">
-                <img
-                  className="message-card-image"
-                  src={seatingCardPreviewUrl}
-                  alt={`Seating card preview for ${guest.name}`}
-                />
-                <div>
+                <div className="message-card-image" aria-label={`Seating card preview for ${guest.name}`}>
+                  <img src={seatingCardPreviewUrl} alt="" />
+                  <span className="card-name-mask" />
+                  <span className="card-table-mask" />
+                  <strong className="card-preview-name">{guest.name}</strong>
+                  <span className="card-preview-table-label">Table</span>
+                  <span className="card-preview-table">{tableNumber || "-"}</span>
+                </div>
+                <div className="message-card-details">
                   <strong>{guest.name}</strong>
                   <small>{guest.phone || "No phone number"}</small>
                 </div>

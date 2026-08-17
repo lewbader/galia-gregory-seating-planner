@@ -405,11 +405,74 @@ label {
   background: #f7f0e4;
   border: 1px solid var(--line);
   border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.message-card-image img {
+  display: block;
+  height: 100%;
   object-fit: cover;
   width: 100%;
 }
 
-.message-card div {
+.card-name-mask,
+.card-table-mask {
+  background: linear-gradient(90deg, rgba(246, 241, 229, 0.94), rgba(248, 243, 233, 0.98));
+  left: 12%;
+  position: absolute;
+  right: 12%;
+}
+
+.card-name-mask {
+  height: 12%;
+  top: 45%;
+}
+
+.card-table-mask {
+  height: 18%;
+  top: 65%;
+}
+
+.card-preview-name,
+.card-preview-table-label,
+.card-preview-table {
+  left: 50%;
+  position: absolute;
+  text-align: center;
+  transform: translateX(-50%);
+  width: 76%;
+}
+
+.card-preview-name {
+  color: var(--foreground);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 2.2vw, 30px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  top: 47.5%;
+}
+
+.card-preview-table-label {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(11px, 1.1vw, 15px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  top: 66.5%;
+}
+
+.card-preview-table {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 1;
+  top: 70.5%;
+}
+
+.message-card-details {
   display: grid;
   gap: 4px;
 }
