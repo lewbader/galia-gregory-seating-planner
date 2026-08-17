@@ -306,17 +306,38 @@ export function SeatingApp() {
       const nameIndex = normalized.findIndex((cell) => ["name", "guest", "guestname"].includes(cell));
       const phoneIndex = normalized.findIndex((cell) => ["phone", "phonenumber", "mobile", "cell"].includes(cell));
       const tableIndex = normalized.findIndex((cell) => ["table", "tablename", "tablenumber"].includes(cell));
+      const capacityIndex = normalized.findIndex((cell) =>
+        ["capacity", "tablecapacity", "seats", "tableseats"].includes(cell),
+      );
 
       if (nameIndex === -1) {
         setImportNotice("The CSV needs a Name column.");
         return;
       }
 
+      const tableNames = Array.from(
+        new Set(
+          body
+            .map((row) => (tableIndex >= 0 ? row[tableIndex]?.trim() : ""))
+            .filter(Boolean),
+        ),
+      );
+
+      const nextTables = tableNames.map((tableName) => {
+        const matchingRow = body.find((row) => tableIndex >= 0 && row[tableIndex]?.trim() === tableName);
+        const capacity = capacityIndex >= 0 ? Number(matchingRow?.[capacityIndex]) : 10;
+        return {
+          id: makeId("t"),
+          name: tableName,
+          capacity: Math.max(1, capacity || 10),
+        };
+      });
+
       const nextGuests = body
         .filter((row) => row[nameIndex])
         .map((row) => {
-          const tableName = tableIndex >= 0 ? row[tableIndex] : "";
-          const matchingTable = tables.find((table) => table.name.toLowerCase() === tableName.toLowerCase());
+          const tableName = tableIndex >= 0 ? row[tableIndex]?.trim() : "";
+          const matchingTable = nextTables.find((table) => table.name.toLowerCase() === tableName.toLowerCase());
           return {
             id: makeId("g"),
             name: row[nameIndex],
@@ -326,8 +347,14 @@ export function SeatingApp() {
         });
 
       setGuests(nextGuests);
+      if (nextTables.length) {
+        setTables(nextTables);
+        setSelectedTableId(nextTables[0]?.id ?? "");
+      }
       setSelectedGuestId(nextGuests[0]?.id ?? "");
-      setImportNotice(`Imported ${nextGuests.length} guests. Use CSV columns: Name, Phone, Table.`);
+      setImportNotice(
+        `Imported ${nextGuests.length} guests${nextTables.length ? ` and ${nextTables.length} tables` : ""}. Use CSV columns: Name, Phone, Table, Capacity.`,
+      );
     });
     event.target.value = "";
   }
