@@ -306,9 +306,6 @@ export function SeatingApp() {
       const nameIndex = normalized.findIndex((cell) => ["name", "guest", "guestname"].includes(cell));
       const phoneIndex = normalized.findIndex((cell) => ["phone", "phonenumber", "mobile", "cell"].includes(cell));
       const tableIndex = normalized.findIndex((cell) => ["table", "tablename", "tablenumber"].includes(cell));
-      const capacityIndex = normalized.findIndex((cell) =>
-        ["capacity", "tablecapacity", "seats", "tableseats"].includes(cell),
-      );
 
       if (nameIndex === -1) {
         setImportNotice("The CSV needs a Name column.");
@@ -324,12 +321,10 @@ export function SeatingApp() {
       );
 
       const nextTables = tableNames.map((tableName) => {
-        const matchingRow = body.find((row) => tableIndex >= 0 && row[tableIndex]?.trim() === tableName);
-        const capacity = capacityIndex >= 0 ? Number(matchingRow?.[capacityIndex]) : 10;
         return {
           id: makeId("t"),
           name: tableName,
-          capacity: Math.max(1, capacity || 10),
+          capacity: 10,
         };
       });
 
@@ -353,7 +348,7 @@ export function SeatingApp() {
       }
       setSelectedGuestId(nextGuests[0]?.id ?? "");
       setImportNotice(
-        `Imported ${nextGuests.length} guests${nextTables.length ? ` and ${nextTables.length} tables` : ""}. Use CSV columns: Name, Phone, Table, Capacity.`,
+        `Imported ${nextGuests.length} guests${nextTables.length ? ` and ${nextTables.length} tables` : ""}. Use CSV columns: Name, Table, Phone.`,
       );
     });
     event.target.value = "";
