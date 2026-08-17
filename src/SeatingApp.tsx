@@ -104,6 +104,10 @@ function tableSortValue(table: Table) {
   return number ? Number(number) : Number.MAX_SAFE_INTEGER;
 }
 
+function planFingerprint(guests: Guest[], tables: Table[]) {
+  return JSON.stringify({ guests, tables });
+}
+
 export function SeatingApp() {
   const firebaseClient = useMemo(() => getFirebaseClient(), []);
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
@@ -123,6 +127,7 @@ export function SeatingApp() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const remoteReadyRef = useRef(false);
   const applyingRemoteRef = useRef(false);
+  const lastSyncedPlanRef = useRef("");
 
   useEffect(() => {
     const saved = window.localStorage.getItem(storageKey);
@@ -164,6 +169,7 @@ export function SeatingApp() {
         const data = snapshot.data() as SeatingPlan | undefined;
         applyingRemoteRef.current = true;
         if (data?.guests && data?.tables) {
+          lastSyncedPlanRef.current = planFingerprint(data.guests, data.tables);
           setGuests(data.guests);
           setTables(data.tables);
           setSelectedGuestId(data.guests[0]?.id ?? "");
@@ -202,6 +208,12 @@ export function SeatingApp() {
   useEffect(() => {
     if (!firebaseClient || !user || !remoteReadyRef.current || applyingRemoteRef.current) return undefined;
 
+    const nextFingerprint = planFingerprint(guests, tables);
+    if (nextFingerprint === lastSyncedPlanRef.current) {
+      setSyncState("synced");
+      return undefined;
+    }
+
     setSyncState("saving");
     const handle = window.setTimeout(() => {
       const planRef = doc(firebaseClient.db, "seatingPlans", firebaseClient.planId);
@@ -215,7 +227,10 @@ export function SeatingApp() {
         },
         { merge: true },
       )
-        .then(() => setSyncState("synced"))
+        .then(() => {
+          lastSyncedPlanRef.current = nextFingerprint;
+          setSyncState("synced");
+        })
         .catch((error: Error) => {
           setSyncState("error");
           setSyncError(error.message);
