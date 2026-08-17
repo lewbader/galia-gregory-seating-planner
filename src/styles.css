@@ -156,6 +156,16 @@ button:disabled {
   opacity: 0.45;
 }
 
+.import-mode {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fffaf2;
+  color: var(--foreground);
+  padding: 0 12px;
+  font-weight: 700;
+}
+
 .secondary,
 .ghost {
   background: #f3eadc;

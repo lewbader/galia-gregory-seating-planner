@@ -32,6 +32,7 @@ type SeatingPlan = {
 };
 
 type SyncState = "local" | "signed-out" | "loading" | "synced" | "saving" | "error";
+type ImportMode = "replace" | "add";
 
 const initialGuests: Guest[] = [
   { id: "g-1", name: "Janet Wild", phone: "516-555-0101", tableId: "t-14" },
@@ -122,6 +123,7 @@ export function SeatingApp() {
   const [newGuestPhone, setNewGuestPhone] = useState("");
   const [newTableName, setNewTableName] = useState("");
   const [newTableCapacity, setNewTableCapacity] = useState(10);
+  const [importMode, setImportMode] = useState<ImportMode>("replace");
   const [importNotice, setImportNotice] = useState("");
   const [copied, setCopied] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -327,7 +329,7 @@ export function SeatingApp() {
         return;
       }
 
-      const tableNames = Array.from(
+      const importedTableNames = Array.from(
         new Set(
           body
             .map((row) => (tableIndex >= 0 ? row[tableIndex]?.trim() : ""))
@@ -335,13 +337,26 @@ export function SeatingApp() {
         ),
       );
 
-      const nextTables = tableNames.map((tableName) => {
+      const existingTableByName = tables.reduce<Record<string, Table>>((map, table) => {
+        map[table.name.toLowerCase()] = table;
+        return map;
+      }, {});
+
+      const importedTables = importedTableNames.map((tableName) => {
         return {
-          id: makeId("t"),
+          id: existingTableByName[tableName.toLowerCase()]?.id ?? makeId("t"),
           name: tableName,
-          capacity: 10,
+          capacity: existingTableByName[tableName.toLowerCase()]?.capacity ?? 10,
         };
       });
+
+      const nextTables =
+        importMode === "add"
+          ? [
+              ...tables,
+              ...importedTables.filter((table) => !existingTableByName[table.name.toLowerCase()]),
+            ]
+          : importedTables;
 
       const nextGuests = body
         .filter((row) => row[nameIndex])
@@ -356,14 +371,20 @@ export function SeatingApp() {
           };
         });
 
-      setGuests(nextGuests);
-      if (nextTables.length) {
+      if (importMode === "add") {
+        setGuests((current) => [...current, ...nextGuests]);
+      } else {
+        setGuests(nextGuests);
+      }
+      if (nextTables.length || importMode === "replace") {
         setTables(nextTables);
         setSelectedTableId(nextTables[0]?.id ?? "");
       }
       setSelectedGuestId(nextGuests[0]?.id ?? "");
       setImportNotice(
-        `Imported ${nextGuests.length} guests${nextTables.length ? ` and ${nextTables.length} tables` : ""}. Use CSV columns: Name, Table, Phone.`,
+        `${importMode === "add" ? "Added" : "Imported"} ${nextGuests.length} guests${
+          importedTables.length ? ` and ${importMode === "add" ? "checked" : "created"} ${importedTables.length} tables` : ""
+        }. Use CSV columns: Name, Table, Phone.`,
       );
     });
     event.target.value = "";
@@ -468,6 +489,15 @@ export function SeatingApp() {
               Sign out
             </button>
           ) : null}
+          <select
+            className="import-mode"
+            value={importMode}
+            aria-label="CSV import mode"
+            onChange={(event) => setImportMode(event.target.value as ImportMode)}
+          >
+            <option value="replace">CSV replaces guests</option>
+            <option value="add">CSV adds guests</option>
+          </select>
           <button type="button" className="secondary" onClick={() => fileInputRef.current?.click()}>
             Import CSV
           </button>
