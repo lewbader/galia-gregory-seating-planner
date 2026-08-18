@@ -439,7 +439,7 @@ export function SeatingApp() {
   function messageFor(guest: Guest) {
     const table = tableById[guest.tableId];
     const tableName = table?.name.replace(/^Table\s*/i, "") ?? "";
-    return `We are so excited to celebrate with you tonight. Your table is ${tableName ? `Table ${tableName}` : "not yet assigned"}. Love, Galia & Gregory`;
+    return `Hey, it's Galia and Greg! We're so excited to celebrate with you tonight. See you soon!\n\nYour table number is ${tableName || "__"}.`;
   }
 
   async function copyAllMessages() {
