@@ -53,7 +53,6 @@ const initialTables: Table[] = [
 ];
 
 const storageKey = "galia-gregory-seating-v1";
-const seatingCardPreviewUrl = "/galia-gregory-seating-card.png";
 
 function makeId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -712,10 +711,10 @@ export function SeatingApp() {
             return (
               <article key={guest.id} className="message-card">
                 <div className="message-card-image" aria-label={`Seating card preview for ${guest.name}`}>
-                  <img src={seatingCardPreviewUrl} alt="" />
-                  <span className="card-name-mask" />
-                  <span className="card-table-mask" />
+                  <span className="card-preview-border" />
+                  <span className="card-preview-monogram">G & G</span>
                   <strong className="card-preview-name">{guest.name}</strong>
+                  <span className="card-preview-divider" />
                   <span className="card-preview-table-label">Table</span>
                   <span className="card-preview-table">{tableNumber || "-"}</span>
                 </div>

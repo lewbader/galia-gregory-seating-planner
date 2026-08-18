@@ -425,74 +425,83 @@ label {
 
 .message-card-image {
   aspect-ratio: 4 / 5;
-  background: #f7f0e4;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.82), transparent 34%),
+    linear-gradient(135deg, #f8f2e6 0%, #efe7d8 100%);
+  border: 10px solid #22242b;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 2px #d7d1c7,
+    inset 0 0 0 5px rgba(174, 174, 174, 0.62);
   overflow: hidden;
+  padding: 9%;
   position: relative;
   width: 100%;
 }
 
-.message-card-image img {
-  display: block;
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-.card-name-mask,
-.card-table-mask {
-  background: linear-gradient(90deg, rgba(246, 241, 229, 0.94), rgba(248, 243, 233, 0.98));
-  left: 12%;
+.card-preview-border {
+  border: 1px solid rgba(36, 38, 44, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(207, 202, 193, 0.9);
+  inset: 5.5%;
   position: absolute;
-  right: 12%;
 }
 
-.card-name-mask {
-  height: 12%;
-  top: 45%;
-}
-
-.card-table-mask {
-  height: 18%;
-  top: 65%;
-}
-
+.card-preview-monogram,
 .card-preview-name,
 .card-preview-table-label,
-.card-preview-table {
+.card-preview-table,
+.card-preview-divider {
   left: 50%;
   position: absolute;
   text-align: center;
   transform: translateX(-50%);
+}
+
+.card-preview-monogram {
+  color: #252833;
+  font-family: "Snell Roundhand", "Bickham Script Pro", "Zapfino", cursive;
+  font-size: clamp(26px, 3.4vw, 52px);
+  font-weight: 400;
+  top: 17%;
   width: 76%;
 }
 
 .card-preview-name {
-  color: var(--foreground);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(18px, 2.2vw, 30px);
+  color: #171b28;
+  font-family: "Didot", "Bodoni 72", "Baskerville", "Times New Roman", serif;
+  font-size: clamp(18px, 2.15vw, 31px);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
   text-transform: uppercase;
-  top: 47.5%;
+  top: 40%;
+  width: 78%;
+}
+
+.card-preview-divider {
+  background: linear-gradient(90deg, transparent, #a7a7a7, #262a33, #a7a7a7, transparent);
+  height: 1px;
+  top: 57.5%;
+  width: 46%;
 }
 
 .card-preview-table-label {
-  color: var(--gold);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(11px, 1.1vw, 15px);
+  color: #252833;
+  font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
+  font-size: clamp(11px, 1vw, 14px);
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  top: 66.5%;
+  top: 64%;
+  width: 76%;
 }
 
 .card-preview-table {
-  color: var(--gold);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(48px, 7vw, 82px);
+  color: #171b28;
+  font-family: "Didot", "Bodoni 72", "Baskerville", "Times New Roman", serif;
+  font-size: clamp(54px, 7.2vw, 92px);
   line-height: 1;
-  top: 70.5%;
+  top: 68%;
+  width: 76%;
 }
 
 .message-card-details {
