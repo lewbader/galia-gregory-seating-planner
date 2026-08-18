@@ -53,7 +53,6 @@ const initialTables: Table[] = [
 ];
 
 const storageKey = "galia-gregory-seating-v1";
-const seatingCardTemplateUrl = "/black-silver-seating-card-template.png";
 
 function makeId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -708,17 +707,8 @@ export function SeatingApp() {
             const phone = cleanPhone(guest.phone);
             const body = messageFor(guest);
             const href = phone ? `sms:${phone}?&body=${encodeURIComponent(body)}` : "";
-            const tableNumber = tableById[guest.tableId]?.name.replace(/^Table\s*/i, "") ?? "";
             return (
               <article key={guest.id} className="message-card">
-                <div className="message-card-image" aria-label={`Seating card preview for ${guest.name}`}>
-                  <img src={seatingCardTemplateUrl} alt="" />
-                  <span className="card-preview-name-mask" />
-                  <span className="card-preview-table-mask" />
-                  <strong className="card-preview-name">{guest.name}</strong>
-                  <span className="card-preview-table-label">Table</span>
-                  <span className="card-preview-table">{tableNumber || "-"}</span>
-                </div>
                 <div className="message-card-details">
                   <strong>{guest.name}</strong>
                   <small>{guest.phone || "No phone number"}</small>
