@@ -332,12 +332,21 @@ label {
   background: white;
   border: 1px solid var(--line);
   color: var(--foreground);
-  display: flex;
-  justify-content: space-between;
   gap: 16px;
   min-height: 64px;
   padding: 12px;
   text-align: left;
+}
+
+.guest-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-row {
+  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
 }
 
 .guest-row.selected,
@@ -368,11 +377,13 @@ label {
 }
 
 .table-row label {
-  width: 92px;
+  min-width: 0;
+  width: 96px;
 }
 
 .table-row input {
   min-height: 34px;
+  width: 100%;
 }
 
 .assign-card {
