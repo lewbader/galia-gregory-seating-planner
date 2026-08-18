@@ -124,10 +124,11 @@ export function SeatingApp() {
   const [newGuestPhone, setNewGuestPhone] = useState("");
   const [newTableName, setNewTableName] = useState("");
   const [newTableCapacity, setNewTableCapacity] = useState(10);
-  const [importMode, setImportMode] = useState<ImportMode>("replace");
+  const [importMenuOpen, setImportMenuOpen] = useState(false);
   const [importNotice, setImportNotice] = useState("");
   const [copied, setCopied] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const importModeRef = useRef<ImportMode>("replace");
   const remoteReadyRef = useRef(false);
   const applyingRemoteRef = useRef(false);
   const lastSyncedPlanRef = useRef("");
@@ -314,10 +315,17 @@ export function SeatingApp() {
     );
   }
 
+  function openCsvImport(mode: ImportMode) {
+    importModeRef.current = mode;
+    setImportMenuOpen(false);
+    fileInputRef.current?.click();
+  }
+
   function importGuests(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
     file.text().then((text) => {
+      const importMode = importModeRef.current;
       const rows = parseCsv(text);
       const [header, ...body] = rows;
       const normalized = header.map((cell) => cell.toLowerCase().replace(/\s+/g, ""));
@@ -490,18 +498,26 @@ export function SeatingApp() {
               Sign out
             </button>
           ) : null}
-          <select
-            className="import-mode"
-            value={importMode}
-            aria-label="CSV import mode"
-            onChange={(event) => setImportMode(event.target.value as ImportMode)}
-          >
-            <option value="replace">CSV replaces guests</option>
-            <option value="add">CSV adds guests</option>
-          </select>
-          <button type="button" className="secondary" onClick={() => fileInputRef.current?.click()}>
-            Import CSV
-          </button>
+          <div className="import-menu">
+            <button
+              type="button"
+              className="secondary"
+              aria-expanded={importMenuOpen}
+              onClick={() => setImportMenuOpen((open) => !open)}
+            >
+              Import CSV
+            </button>
+            {importMenuOpen ? (
+              <div className="import-menu-options">
+                <button type="button" onClick={() => openCsvImport("replace")}>
+                  Replace guests
+                </button>
+                <button type="button" onClick={() => openCsvImport("add")}>
+                  Add guests
+                </button>
+              </div>
+            ) : null}
+          </div>
           <button type="button" className="secondary" onClick={exportGuests}>
             Export Guests
           </button>

@@ -156,16 +156,6 @@ button:disabled {
   opacity: 0.45;
 }
 
-.import-mode {
-  min-height: 42px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: #fffaf2;
-  color: var(--foreground);
-  padding: 0 12px;
-  font-weight: 700;
-}
-
 .secondary,
 .ghost {
   background: #f3eadc;
@@ -179,6 +169,39 @@ button:disabled {
 
 .hidden-input {
   display: none;
+}
+
+.import-menu {
+  position: relative;
+}
+
+.import-menu-options {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px rgba(51, 42, 28, 0.14);
+  display: grid;
+  gap: 4px;
+  min-width: 190px;
+  padding: 6px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 10;
+}
+
+.import-menu-options button {
+  background: white;
+  color: var(--foreground);
+  justify-content: flex-start;
+  min-height: 38px;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.import-menu-options button:hover,
+.import-menu-options button:focus-visible {
+  background: #f3eadc;
 }
 
 .stats-grid {
